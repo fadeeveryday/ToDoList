@@ -4,7 +4,15 @@ const dom = {
   tasks: document.getElementById('tasks'),
 }
 //array of tasks 
-const tasks = [];
+let tasks = [];
+
+let local = localStorage.getItem('ArrayOfTasks');
+
+if (local != undefined) {
+  tasks = JSON.parse(local);
+  tasksRender(tasks)
+}
+
 
 // Add new task when user clicked on button
 dom.add.onclick = () => {
@@ -26,13 +34,13 @@ function checkForEnter(key) {
 //function for add a task
 function addTask(text, list) {
   const timestamp = Date.now();
-  console.log(timestamp);
   const task = {
     id: timestamp,
     text,
     isComplete: false
   }
   list.push(task);
+  localStorage.setItem('ArrayOfTasks', JSON.stringify(list));
 }
 
 //func for check task on array of tasks
@@ -49,7 +57,7 @@ function isNotHaveTask(text, list) {
   return isNotHave;
 }
 
-//func whitch return list of task 
+//func which return list of task 
 function tasksRender(list) {
   let htmlList = '';
 
@@ -70,7 +78,7 @@ function tasksRender(list) {
 
     htmlList = htmlList + taskHtml;
   })
- 
+
   dom.tasks.innerHTML = htmlList;
 }
 
@@ -93,7 +101,7 @@ dom.tasks.onclick = (event) => {
   }
 }
 
-//fuck for change status of task
+//func for change status of task
 function changeTaskStatus(id, list) {
   list.forEach((task) => {
     if (task.id == id) {
@@ -110,3 +118,15 @@ function deleteTask(id, list) {
     }
   })
 }
+
+//func for save data on localStorage
+// function saveData(list, local) {
+  // if (local !== '' && local !== null) {
+    // list = JSON.parse(local)
+    // tasksRender(list);
+  // } 
+  // tasksRender(list);
+  /*else {
+    tasksRender(list);
+  } */
+// }
