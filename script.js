@@ -10,7 +10,7 @@ let local = localStorage.getItem('ArrayOfTasks');
 
 if (local != undefined) {
   tasks = JSON.parse(local);
-  tasksRender(tasks)
+  tasksRender(tasks);
 }
 
 
@@ -40,7 +40,7 @@ function addTask(text, list) {
     isComplete: false
   }
   list.push(task);
-  localStorage.setItem('ArrayOfTasks', JSON.stringify(list));
+  saveData(tasks);
 }
 
 //func for check task on array of tasks
@@ -91,12 +91,14 @@ dom.tasks.onclick = (event) => {
     const task = target.parentElement.parentElement;
     const taskId = task.getAttribute('id');
     changeTaskStatus(taskId, tasks);
+    saveData(tasks);
     tasksRender(tasks);
   }
   if (isDeleteEl) {
     const task = target.parentElement;
     const taskId = task.getAttribute('id');
-    deleteTask(taskId, tasks); 
+    deleteTaskFromLS(taskId, tasks);
+    deleteTask(taskId, tasks);
     tasksRender(tasks);
   }
 }
@@ -120,13 +122,20 @@ function deleteTask(id, list) {
 }
 
 //func for save data on localStorage
-// function saveData(list, local) {
-  // if (local !== '' && local !== null) {
-    // list = JSON.parse(local)
-    // tasksRender(list);
-  // } 
-  // tasksRender(list);
-  /*else {
-    tasksRender(list);
-  } */
-// }
+function saveData(list) {
+  localStorage.setItem('ArrayOfTasks', JSON.stringify(list));
+}
+
+//func for delete value from localStorage on click to button
+function deleteTaskFromLS(id, list) {
+  list.forEach((task, idx) => {
+    if (task.id == id) {
+      tasks = JSON.parse(local);
+      list.splice(idx, 1);
+      if (list.length == 0) {
+          localStorage.removeItem('ArrayOfTasks');
+      }
+      saveData(list);
+    }
+  })
+}
